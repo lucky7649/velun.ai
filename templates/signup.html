@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up for velun.ai</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #e8e8e8;
+        }
+
+        .header {
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: #e8e8e8;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .signup-box {
+            width: 100%;
+            max-width: 440px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #c87941 0%, #a65a2f 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            margin: 0 auto 24px;
+        }
+
+        .welcome-section h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #e8e8e8;
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            font-size: 15px;
+            color: #8a8a8a;
+            line-height: 1.5;
+        }
+
+        .signup-form {
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #e8e8e8;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            color: #e8e8e8;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #4a4a4a;
+            background: #1f1f1f;
+        }
+
+        .form-group input::placeholder {
+            color: #6a6a6a;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8a8a8a;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: #e8e8e8;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .strength-fill.weak {
+            width: 33%;
+            background: #ff6b6b;
+        }
+
+        .strength-fill.medium {
+            width: 66%;
+            background: #ffd93d;
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: #6bff6b;
+        }
+
+        .strength-text {
+            color: #8a8a8a;
+        }
+
+        .strength-text.weak { color: #ff6b6b; }
+        .strength-text.medium { color: #ffd93d; }
+        .strength-text.strong { color: #6bff6b; }
+
+        .checkbox-group {
+            margin-bottom: 24px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #c87941;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-wrapper label {
+            color: #8a8a8a;
+            cursor: pointer;
+            user-select: none;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .checkbox-wrapper label a {
+            color: #c87941;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .checkbox-wrapper label a:hover {
+            color: #d4894a;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #c87941 0%, #a65a2f 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(200, 121, 65, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-prompt {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #8a8a8a;
+        }
+
+        .login-prompt a {
+            color: #c87941;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .login-prompt a:hover {
+            color: #d4894a;
+        }
+
+        .footer {
+            padding: 24px 32px;
+            text-align: center;
+            font-size: 13px;
+            color: #6a6a6a;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #8a8a8a;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #e8e8e8;
+        }
+
+        .error-message {
+            background: #2a1a1a;
+            border: 1px solid #4a2a2a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            font-size: 14px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .success-message {
+            background: #1a2a1a;
+            border: 1px solid #2a4a2a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            color: #6bff6b;
+            font-size: 14px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-error {
+            border-color: #ff6b6b !important;
+        }
+
+        .field-error {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+            .main-container {
+                padding: 20px;
+            }
+            .signup-form {
+                padding: 24px;
+            }
+            .welcome-section h1 {
+                font-size: 24px;
+            }
+            .footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Velun AI" class="logo-img">
+        <div class="logo-text">velun.ai</div>
+    </div>
+
+    <div class="main-container">
+        <div class="signup-box">
+            <div class="welcome-section">
+                <div class="welcome-icon">✨</div>
+                <h1>Create your account</h1>
+                <p>Join thousands of users having conversations with AI</p>
+            </div>
+
+            <div class="signup-form">
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <!-- Use Flask form submission instead of JavaScript -->
+                <form id="signupForm" method="POST" action="{{ url_for('signup') }}">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username"
+                            placeholder="Choose a username" 
+                            required
+                            minlength="3"
+                            maxlength="80"
+                        >
+                        <div class="field-error" id="usernameError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            placeholder="name@example.com" 
+                            required
+                        >
+                        <div class="field-error" id="emailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                placeholder="Create a strong password" 
+                                required
+                                minlength="6"
+                                oninput="checkPasswordStrength()"
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('password', 'toggleIcon1')">
+                                <span id="toggleIcon1">Show</span>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength" style="display: none;">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText"></div>
+                        </div>
+                        <div class="field-error" id="passwordError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="password" 
+                                id="confirm_password" 
+                                name="confirm_password"
+                                placeholder="Re-enter your password" 
+                                required
+                                minlength="6"
+                                oninput="validatePasswordMatch()"
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirm_password', 'toggleIcon2')">
+                                <span id="toggleIcon2">Show</span>
+                            </button>
+                        </div>
+                        <div class="field-error" id="confirmPasswordError"></div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <label for="terms">
+                                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Create account
+                    </button>
+                </form>
+
+                <div class="login-prompt">
+                    Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-links">
+            <a href="{{ url_for('landing') }}">Home</a>
+            <a href="#">Help</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = 'Show';
+            }
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (password.length === 0) {
+                strengthDiv.style.display = 'none';
+                return;
+            }
+            
+            strengthDiv.style.display = 'block';
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            strengthFill.className = 'strength-fill';
+            strengthText.className = 'strength-text';
+            
+            if (strength <= 1) {
+                strengthFill.classList.add('weak');
+                strengthText.classList.add('weak');
+                strengthText.textContent = 'Weak password';
+            } else if (strength <= 2) {
+                strengthFill.classList.add('medium');
+                strengthText.classList.add('medium');
+                strengthText.textContent = 'Medium strength';
+            } else {
+                strengthFill.classList.add('strong');
+                strengthText.classList.add('strong');
+                strengthText.textContent = 'Strong password';
+            }
+        }
+
+        function validatePasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const confirmError = document.getElementById('confirmPasswordError');
+            const confirmInput = document.getElementById('confirm_password');
+            
+            if (confirmPassword && password !== confirmPassword) {
+                confirmError.textContent = 'Passwords do not match';
+                confirmError.style.display = 'block';
+                confirmInput.classList.add('input-error');
+                return false;
+            } else {
+                confirmError.style.display = 'none';
+                confirmInput.classList.remove('input-error');
+                return true;
+            }
+        }
+
+        // Auto-focus username input on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('username').focus();
+        });
+    </script>
+</body>
+</html>

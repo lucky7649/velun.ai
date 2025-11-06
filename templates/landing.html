@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page | velun.ai</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+            background: #000000;
+            color: #e8e8e8;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1a1a1a;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .header.scrolled {
+            padding: 16px 32px;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        
+       
+
+        .header-right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            margin-right: 24px;
+        }
+
+        .nav-links a {
+            color: #a8a8a8;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #e8e8e8;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #3a3a3a;
+            color: #e8e8e8;
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            border-color: #4a4a4a;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c87941 0%, #a65a2f 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(200, 121, 65, 0.4);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 32px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background: radial-gradient(circle at 50% 50%, #c87941 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.03; }
+            50% { transform: scale(1.1); opacity: 0.05; }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #c87941;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #e8e8e8 0%, #a8a8a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #a8a8a8;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .features {
+            padding: 120px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #c87941;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #e8e8e8;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: #8a8a8a;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 40px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: #3a3a3a;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #c87941 0%, #a65a2f 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #e8e8e8;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            color: #8a8a8a;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            padding: 120px 32px;
+            background: #0a0a0a;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .demo-window {
+            background: #000000;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-top: 60px;
+        }
+
+        .demo-header {
+            background: #1a1a1a;
+            padding: 16px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3a3a3a;
+        }
+
+        .demo-content {
+            padding: 40px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .demo-message {
+            display: flex;
+            gap: 16px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .demo-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .demo-message.user .demo-avatar {
+            background: #2a2a2a;
+            color: #e8e8e8;
+        }
+
+        .demo-message.ai .demo-avatar {
+            background: linear-gradient(135deg, #c87941 0%, #a65a2f 100%);
+            color: white;
+        }
+
+        .demo-text {
+            flex: 1;
+            color: #d4d4d4;
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            padding: 120px 32px;
+            text-align: center;
+        }
+
+        .cta-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid #2a2a2a;
+            border-radius: 24px;
+            padding: 80px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(200, 121, 65, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta-box h2 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #e8e8e8;
+            position: relative;
+        }
+
+        .cta-box p {
+            font-size: 18px;
+            color: #a8a8a8;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            position: relative;
+        }
+
+        .footer {
+            padding: 60px 32px 32px;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-brand p {
+            color: #6a6a6a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-column h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8e8e8;
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: #8a8a8a;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #e8e8e8;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 32px;
+            border-top: 1px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6a6a6a;
+            font-size: 14px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+            border-radius: 8px;
+            color: #8a8a8a;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .social-links a:hover {
+            background: #2a2a2a;
+            color: #e8e8e8;
+        }
+
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .section-header h2 {
+                font-size: 40px;
+            }
+
+            .cta-box h2 {
+                font-size: 40px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .features {
+                padding: 80px 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 32px;
+            }
+
+            .demo-section {
+                padding: 80px 20px;
+            }
+
+            .demo-content {
+                padding: 24px;
+            }
+
+            .cta-section {
+                padding: 80px 20px;
+            }
+
+            .cta-box {
+                padding: 60px 32px;
+            }
+
+            .cta-box h2 {
+                font-size: 32px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        .logo-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+    </style>
+</head>
+<body>
+<header class="header" id="header">
+    <div class="header-left">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="velun.ai" class="logo-img">
+        <div class="logo-text">velun.ai</div>
+    </div>
+    <div class="header-right">
+        <nav class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#demo">Demo</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#about">About</a>
+        </nav>
+        <a href="{{ url_for('login') }}" class="btn btn-secondary">Log in</a>
+        <a href="{{ url_for('signup') }}" class="btn btn-primary">Get Started</a>
+    </div>
+</header>
+
+    <section class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <div class="hero-badge">✨ Powered by Advanced AI</div>
+            <h1>Conversations that understand you</h1>
+            <p>Experience the next generation of AI chat. Get instant answers, creative ideas, and intelligent assistance tailored to your needs.</p>
+            <div class="hero-cta">
+                <a href="{{ url_for('signup') }}" class="btn btn-primary" style="padding: 14px 32px; font-size: 16px;">Start chatting for free</a>
+                <a href="#demo" class="btn btn-secondary" style="padding: 14px 32px; font-size: 16px;">See how it works</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <div class="section-badge">FEATURES</div>
+            <h2>Why choose velun.ai</h2>
+            <p>Powerful features designed to make your conversations more productive and enjoyable</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Natural Conversations</h3>
+                <p>Engage in fluid, context-aware discussions that feel remarkably human. Our AI understands nuance and maintains conversation flow.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Instant Responses</h3>
+                <p>Get immediate answers to your questions. No waiting, no delays. Lightning-fast AI processing for real-time assistance.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Accurate Information</h3>
+                <p>Receive reliable, well-researched responses backed by comprehensive knowledge across countless domains.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Private & Secure</h3>
+                <p>Your conversations are encrypted and private. We prioritize your data security and never share your information.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Creative Assistant</h3>
+                <p>From writing to brainstorming, get creative help with content generation, ideas, and problem-solving.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Learn & Grow</h3>
+                <p>Explore new topics, get explanations, and expand your knowledge with an AI tutor available 24/7.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section" id="demo">
+        <div class="demo-container">
+            <div class="section-header">
+                <div class="section-badge">DEMO</div>
+                <h2>See it in action</h2>
+                <p>Experience how natural and helpful conversations can be</p>
+            </div>
+            <div class="demo-window">
+                <div class="demo-header">
+                    <div class="demo-dot"></div>
+                    <div class="demo-dot"></div>
+                    <div class="demo-dot"></div>
+                </div>
+                <div class="demo-content">
+                    <div class="demo-message user">
+                        <div class="demo-avatar">U</div>
+                        <div class="demo-text">Can you help me write a professional email to my team about an upcoming project deadline?</div>
+                    </div>
+                    <div class="demo-message ai">
+                        <div class="demo-avatar">AI</div>
+                        <div class="demo-text">I'd be happy to help you draft a professional email. Here's a well-structured message that balances clarity with professionalism while maintaining a collaborative tone. Feel free to customize it based on your specific needs and team culture.</div>
+                    </div>
+                    <div class="demo-message user">
+                        <div class="demo-avatar">U</div>
+                        <div class="demo-text">That's perfect! Can you also suggest some ways to motivate the team?</div>
+                    </div>
+                    <div class="demo-message ai">
+                        <div class="demo-avatar">AI</div>
+                        <div class="demo-text">Absolutely! Here are some effective strategies to boost team motivation: recognize individual contributions, set clear milestones, offer support resources, and celebrate small wins along the way.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Ready to start?</h2>
+            <p>Join thousands of users already having smarter conversations with AI</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('signup') }}" class="btn btn-primary" style="padding: 14px 32px; font-size: 16px;">Get Started Free</a>
+                <a href="#features" class="btn btn-secondary" style="padding: 14px 32px; font-size: 16px;">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="velun.ai" class="logo-img">
+                    <div class="logo-text">velun.ai</div>
+                </div>
+                <p>Intelligent conversations powered by advanced AI technology. Making artificial intelligence accessible to everyone.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Product</h4>
+                <div class="footer-links">
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#demo">Demo</a>
+                    <a href="#">API</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <div class="footer-links">
+                    <a href="#">About Us</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Security</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>&copy; 2025 velun.ai @All rights reserved.</div>
+            <div class="social-links">
+                <a href="#" aria-label="Twitter">𝕏</a>
+                <a href="#" aria-label="GitHub">⚙</a>
+                <a href="#" aria-label="LinkedIn">in</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animate demo messages on scroll
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
