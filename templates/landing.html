@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Landing Page | velun.ai</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 
@@ -34,27 +34,43 @@
             border-bottom: 1px solid #1a1a1a;
             z-index: 1000;
             transition: all 0.3s;
+            height: 72px;
         }
 
         .header.scrolled {
             padding: 16px 32px;
             background: rgba(0, 0, 0, 0.95);
             border-bottom: 1px solid #2a2a2a;
+            height: 64px;
         }
 
         .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-shrink: 0;
         }
 
-        
-       
+        .logo-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e8e8e8;
+            white-space: nowrap;
+        }
 
         .header-right {
             display: flex;
             gap: 16px;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .nav-links {
@@ -68,6 +84,7 @@
             text-decoration: none;
             font-size: 15px;
             transition: color 0.2s;
+            white-space: nowrap;
         }
 
         .nav-links a:hover {
@@ -85,6 +102,8 @@
             display: inline-block;
             border: none;
             font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .btn-secondary {
@@ -510,15 +529,40 @@
 
         @media (max-width: 768px) {
             .header {
-                padding: 16px 20px;
+                padding: 12px 16px;
+                height: 60px;
+            }
+
+            .header.scrolled {
+                padding: 10px 16px;
+                height: 56px;
+            }
+
+            .logo-img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .logo-text {
+                font-size: 16px;
             }
 
             .nav-links {
                 display: none;
             }
 
+            .header-right {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 8px 14px;
+                font-size: 14px;
+            }
+
             .hero {
                 padding: 100px 20px 60px;
+                min-height: auto;
             }
 
             .hero h1 {
@@ -526,11 +570,19 @@
             }
 
             .hero p {
-                font-size: 18px;
+                font-size: 16px;
+                margin-bottom: 32px;
             }
 
             .hero-cta {
                 flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-cta .btn {
+                width: 100%;
+                padding: 14px 24px !important;
+                font-size: 15px !important;
             }
 
             .features {
@@ -539,10 +591,23 @@
 
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .feature-card {
+                padding: 32px 24px;
+            }
+
+            .section-header {
+                margin-bottom: 48px;
             }
 
             .section-header h2 {
                 font-size: 32px;
+            }
+
+            .section-header p {
+                font-size: 16px;
             }
 
             .demo-section {
@@ -550,7 +615,16 @@
             }
 
             .demo-content {
-                padding: 24px;
+                padding: 24px 20px;
+                min-height: auto;
+            }
+
+            .demo-message {
+                gap: 12px;
+            }
+
+            .demo-text {
+                font-size: 14px;
             }
 
             .cta-section {
@@ -558,20 +632,38 @@
             }
 
             .cta-box {
-                padding: 60px 32px;
+                padding: 48px 24px;
+                border-radius: 16px;
             }
 
             .cta-box h2 {
-                font-size: 32px;
+                font-size: 28px;
+                margin-bottom: 16px;
+            }
+
+            .cta-box p {
+                font-size: 16px;
+                margin-bottom: 32px;
             }
 
             .cta-buttons {
                 flex-direction: column;
+                width: 100%;
+            }
+
+            .cta-buttons .btn {
+                width: 100%;
+                padding: 14px 24px !important;
+                font-size: 15px !important;
+            }
+
+            .footer {
+                padding: 48px 20px 24px;
             }
 
             .footer-content {
                 grid-template-columns: 1fr;
-                gap: 40px;
+                gap: 32px;
             }
 
             .footer-bottom {
@@ -581,12 +673,45 @@
             }
         }
 
-        .logo-img {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-    border-radius: 8px;
-}
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 12px;
+                height: 56px;
+            }
+
+            .header.scrolled {
+                padding: 8px 12px;
+                height: 52px;
+            }
+
+            .logo-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .logo-text {
+                font-size: 15px;
+            }
+
+            .btn {
+                padding: 7px 12px;
+                font-size: 13px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .hero-badge {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            .section-badge {
+                font-size: 12px;
+                padding: 5px 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -710,7 +835,7 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <div class="footer-logo">
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="velun.ai" class="logo-img">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="velun.ai" class="logo-img">
                     <div class="logo-text">velun.ai</div>
                 </div>
                 <p>Intelligent conversations powered by advanced AI technology. Making artificial intelligence accessible to everyone.</p>

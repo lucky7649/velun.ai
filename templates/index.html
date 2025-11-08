@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -13,17 +13,22 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
             background: #000000;
-            height: 100vh;
             display: flex;
             flex-direction: column;
             color: #e8e8e8;
-            overflow: hidden;
         }
 
-        /* Header Styles - Updated to match theme */
+        /* Header Styles */
         .header {
             background: #1a1a1a;
             border-bottom: 1px solid #2a2a2a;
@@ -32,15 +37,25 @@
             justify-content: space-between;
             align-items: center;
             min-height: 60px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 100;
         }
 
         .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
+            flex: 1;
+            min-width: 0;
         }
 
-        
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
 
         .app-title {
             font-size: 16px;
@@ -50,6 +65,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .title-icon {
@@ -60,6 +76,7 @@
             display: flex;
             align-items: center;
             position: relative;
+            flex-shrink: 0;
         }
 
         /* User Profile Section */
@@ -137,7 +154,7 @@
         /* Dropdown Menu */
         .user-menu {
             position: absolute;
-            top: 50px;
+            top: calc(100% + 8px);
             right: 0;
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
@@ -225,6 +242,7 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .settings-modal.active {
@@ -236,7 +254,7 @@
             border-radius: 12px;
             border: 1px solid #2a2a2a;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            width: 90%;
+            width: 100%;
             max-width: 400px;
             animation: slideUp 0.3s ease;
         }
@@ -360,30 +378,12 @@
             color: #e8e8e8;
         }
 
-        @media (max-width: 768px) {
-            .header {
-                padding: 12px 16px;
-            }
-
-            .user-info {
-                display: none;
-            }
-
-            .user-profile {
-                padding: 8px 12px;
-            }
-
-            .user-menu {
-                right: 0;
-                min-width: 200px;
-            }
-        }
-
         /* Main Content Styles */
         .main-container {
             flex: 1;
             display: flex;
             overflow: hidden;
+            min-height: 0;
         }
 
         .chat-wrapper {
@@ -393,15 +393,18 @@
             max-width: 900px;
             margin: 0 auto;
             width: 100%;
+            min-height: 0;
         }
 
         .chat-container {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 24px;
             display: flex;
             flex-direction: column;
             gap: 32px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .chat-container::-webkit-scrollbar {
@@ -469,6 +472,8 @@
             max-width: 100%;
             line-height: 1.65;
             font-size: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .message-group.user .message-content {
@@ -524,6 +529,172 @@
             overflow-x: auto;
             margin: 12px 0;
             border: 1px solid #2a2a2a;
+            position: relative;
+        }
+
+        .code-block-wrapper {
+            position: relative;
+            margin: 12px 0;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #e8e8e8;
+            padding: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+            z-index: 10;
+            font-family: inherit;
+            min-width: 32px;
+            min-height: 32px;
+        }
+
+        .copy-code-btn:hover {
+            background: #3a3a3a;
+            border-color: #4a4a4a;
+        }
+
+        .copy-code-btn.copied {
+            background: #2d5016;
+            border-color: #4a7c2c;
+            color: #90ee90;
+        }
+
+        .copy-code-btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 320px;
+            max-width: 500px;
+            pointer-events: all;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.hiding {
+            animation: slideDown 0.3s ease forwards;
+        }
+
+        @keyframes slideDown {
+            to {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 20px;
+        }
+
+        .toast-icon.warning {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .toast-icon.success {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4caf50;
+        }
+
+        .toast-icon.error {
+            background: rgba(244, 67, 54, 0.15);
+            color: #f44336;
+        }
+
+        .toast-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .toast-title {
+            color: #e8e8e8;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .toast-message {
+            color: #a8a8a8;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .toast-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 8px;
+        }
+
+        .toast-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .toast-btn.primary {
+            background: #c87941;
+            color: white;
+        }
+
+        .toast-btn.primary:hover {
+            background: #d68a52;
+        }
+
+        .toast-btn.secondary {
+            background: #2a2a2a;
+            color: #e8e8e8;
+            border: 1px solid #3a3a3a;
+        }
+
+        .toast-btn.secondary:hover {
+            background: #3a3a3a;
         }
 
         .message-group.ai .message-content pre code {
@@ -579,6 +750,7 @@
             border-top: 1px solid #2a2a2a;
             background: #000000;
             padding: 16px 24px 24px;
+            flex-shrink: 0;
         }
 
         .input-wrapper {
@@ -633,6 +805,7 @@
             transition: all 0.2s;
             font-family: inherit;
             align-self: flex-end;
+            white-space: nowrap;
         }
 
         #sendBtn:hover:not(:disabled) {
@@ -723,28 +896,267 @@
         .empty-state p {
             font-size: 15px;
             color: #8a8a8a;
+            text-align: center;
         }
 
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
+            .header {
+                padding: 10px 12px;
+                min-height: 56px;
+            }
+
+            .header-left {
+                gap: 8px;
+            }
+
+            .app-title {
+                font-size: 15px;
+            }
+
+            .logo-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .user-profile {
+                padding: 6px 10px;
+                gap: 8px;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            .user-menu {
+                right: 0;
+                min-width: 200px;
+            }
+
             .chat-container {
-                padding: 16px;
+                padding: 16px 12px;
+                gap: 24px;
             }
 
             .input-area {
-                padding: 12px 16px 16px;
+                padding: 12px;
             }
 
-            .header {
-                padding: 12px 16px;
+            .message-group {
+                gap: 12px;
+                max-width: 100%;
+            }
+
+            .avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            .message-content {
+                font-size: 14px;
+                max-width: calc(100vw - 68px); /* Account for avatar and gaps */
+                overflow-x: hidden;
+            }
+
+            /* FIX: Prevent content overflow */
+            .message-group.ai .message-content {
+                width: 100%;
+            }
+
+            .message-group.ai .message-content * {
+                max-width: 100%;
+                overflow-x: auto;
+            }
+
+            /* FIX: Better code block handling on mobile */
+            .message-group.ai .message-content pre {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 40px 12px 12px 12px;
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .message-group.ai .message-content pre code {
+                font-size: 0.8em;
+                word-break: normal;
+                white-space: pre;
+                display: block;
+            }
+
+            /* FIX: Copy button positioning on mobile */
+            .copy-code-btn {
+                top: 6px;
+                right: 6px;
+                padding: 6px;
+                min-width: 28px;
+                min-height: 28px;
+                z-index: 20;
+            }
+
+            .copy-code-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            /* FIX: Tables on mobile */
+            .message-group.ai .message-content table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* FIX: Images on mobile */
+            .message-group.ai .message-content img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .empty-state {
+                padding: 32px 16px;
+            }
+
+            .empty-state-icon {
+                width: 56px;
+                height: 56px;
+                font-size: 28px;
+            }
+
+            .empty-state h3 {
+                font-size: 18px;
+            }
+
+            .empty-state p {
+                font-size: 14px;
+            }
+
+            #messageInput {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            #sendBtn {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+
+            .input-container {
+                min-height: 48px;
+            }
+
+            .toast-container {
+                bottom: 16px;
+                left: 16px;
+                right: 16px;
+                transform: none;
+            }
+
+            .toast {
+                min-width: auto;
+                width: 100%;
+                padding: 14px 16px;
+            }
+
+            .toast-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .toast-actions {
+                flex-direction: column;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 8px;
+            }
+
+            .toast {
+                flex-wrap: wrap;
+            }
+
+            .toast-content {
+                flex: 1 1 100%;
+            }
+
+            .toast-btn {
+                width: 100%;
             }
         }
 
-        .logo-img {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    border-radius: 6px;
-}
+        @media (max-width: 380px) {
+            .header {
+                padding: 8px 10px;
+            }
+
+            .app-title {
+                font-size: 14px;
+            }
+
+            .logo-img {
+                width: 24px;
+                height: 24px;
+            }
+
+            .user-avatar {
+                width: 26px;
+                height: 26px;
+            }
+
+            .chat-container {
+                padding: 12px 8px;
+            }
+
+            .input-area {
+                padding: 10px 8px;
+            }
+
+            .message-content {
+                max-width: calc(100vw - 60px); /* Tighter for smaller screens */
+            }
+
+            /* FIX: Even smaller devices */
+            .message-group.ai .message-content pre {
+                padding: 38px 10px 10px 10px;
+            }
+
+            .copy-code-btn {
+                top: 5px;
+                right: 5px;
+                padding: 5px;
+                min-width: 26px;
+                min-height: 26px;
+            }
+
+            .copy-code-btn svg {
+                width: 13px;
+                height: 13px;
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                min-height: 48px;
+                padding: 8px 12px;
+            }
+
+            .empty-state {
+                padding: 24px 16px;
+            }
+
+            .empty-state-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -753,7 +1165,6 @@
         <div class="header-left">
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Velun AI" class="logo-img">
             <h1 class="app-title">
-               
                 velun.ai
             </h1>
         </div>
@@ -843,7 +1254,7 @@
             <div class="chat-container" id="chatContainer">
                 <div class="empty-state">
                     <div class="empty-state-icon">💬</div>
-                    </h4>Welcom to velun.ai !</h4>
+                    <h3>Welcome to velun.ai!</h3>
                     <p>Start a conversation by typing a message below</p>
                 </div>
                 <div class="typing-indicator" id="typingIndicator">
@@ -872,6 +1283,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
         const sessionId = 'session_' + Date.now();
@@ -997,6 +1411,9 @@
                         document.querySelectorAll('pre code:not(.hljs)').forEach((block) => {
                             hljs.highlightElement(block);
                         });
+                        // Re-add copy buttons after syntax highlighting
+                        const aiMessages = document.querySelectorAll('.message-group.ai .message-content');
+                        aiMessages.forEach(msg => addCopyButtons(msg));
                     }, 100);
                 } else {
                     addMessage('Error: ' + (data.error || 'Unknown error occurred'), 'ai', false);
@@ -1025,6 +1442,8 @@
             
             if (isHTML) {
                 content.innerHTML = text;
+                // Add copy buttons to code blocks
+                setTimeout(() => addCopyButtons(content), 10);
             } else {
                 content.textContent = text;
             }
@@ -1036,6 +1455,97 @@
             scrollToBottom();
         }
 
+        function addCopyButtons(container) {
+            const codeBlocks = container.querySelectorAll('pre code');
+            codeBlocks.forEach((codeBlock) => {
+                const pre = codeBlock.parentElement;
+                
+                // Don't add button if it already exists
+                if (pre.querySelector('.copy-code-btn')) {
+                    return;
+                }
+                
+                // Create copy button
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-code-btn';
+                copyBtn.title = 'Copy code';
+                copyBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                `;
+                
+                copyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const code = codeBlock.textContent || codeBlock.innerText;
+                    
+                    // Try multiple methods to copy
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(code).then(() => {
+                            showCopiedState(copyBtn);
+                        }).catch(err => {
+                            console.error('Clipboard API failed:', err);
+                            fallbackCopy(code, copyBtn);
+                        });
+                    } else {
+                        fallbackCopy(code, copyBtn);
+                    }
+                });
+                
+                pre.style.position = 'relative';
+                pre.appendChild(copyBtn);
+            });
+        }
+
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-999999px';
+            textarea.style.top = '-999999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopiedState(button);
+                } else {
+                    alert('Failed to copy code. Please copy manually.');
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                alert('Failed to copy code. Please copy manually.');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        function showCopiedState(button) {
+            button.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            `;
+            button.classList.add('copied');
+            button.title = 'Copied!';
+            
+            setTimeout(() => {
+                button.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                `;
+                button.classList.remove('copied');
+                button.title = 'Copy code';
+            }, 2000);
+        }
+
         function scrollToBottom() {
             const chatContainer = document.getElementById('chatContainer');
             setTimeout(() => {
@@ -1044,38 +1554,147 @@
         }
 
         async function clearChat() {
-            if (!confirm('Are you sure you want to clear the chat?')) return;
-            
-            try {
-                await fetch('/api/clear', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+            showToast({
+                type: 'warning',
+                title: 'Clear Chat',
+                message: 'Are you sure you want to clear all messages? This cannot be undone.',
+                actions: [
+                    {
+                        text: 'Cancel',
+                        type: 'secondary',
+                        onClick: () => {}
                     },
-                    body: JSON.stringify({
-                        session_id: sessionId
-                    })
-                });
-                
-                const chatContainer = document.getElementById('chatContainer');
-                chatContainer.innerHTML = `
-                    <div class="empty-state">
-                        <h2>Welcome to velun.ai !</h2>
-                        <p>Start a conversation by typing a message below</p>
-                    </div>
-                    <div class="typing-indicator" id="typingIndicator">
-                        <div class="avatar">AI</div>
-                        <div class="typing-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
+                    {
+                        text: 'Clear',
+                        type: 'primary',
+                        onClick: async () => {
+                            try {
+                                await fetch('/api/clear', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        session_id: sessionId
+                                    })
+                                });
+                                
+                                const chatContainer = document.getElementById('chatContainer');
+                                chatContainer.innerHTML = `
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">💬</div>
+                                        <h3>Welcome to velun.ai!</h3>
+                                        <p>Start a conversation by typing a message below</p>
+                                    </div>
+                                    <div class="typing-indicator" id="typingIndicator">
+                                        <div class="avatar">AI</div>
+                                        <div class="typing-dots">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                                showToast({
+                                    type: 'success',
+                                    title: 'Chat Cleared',
+                                    message: 'All messages have been deleted successfully.',
+                                    duration: 3000
+                                });
+                                
+                                toggleUserMenu();
+                            } catch (error) {
+                                showToast({
+                                    type: 'error',
+                                    title: 'Error',
+                                    message: 'Failed to clear chat. Please try again.',
+                                    duration: 4000
+                                });
+                                console.error('Clear error:', error);
+                            }
+                        }
+                    }
+                ]
+            });
+        }
+
+        function showToast(options) {
+            const {
+                type = 'info',
+                title = '',
+                message = '',
+                duration = null,
+                actions = []
+            } = options;
+
+            const toastContainer = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            let actionsHTML = '';
+            if (actions.length > 0) {
+                actionsHTML = `
+                    <div class="toast-actions">
+                        ${actions.map((action, index) => `
+                            <button class="toast-btn ${action.type || 'secondary'}" data-action="${index}">
+                                ${action.text}
+                            </button>
+                        `).join('')}
                     </div>
                 `;
-            } catch (error) {
-                alert('Error clearing chat: ' + error.message);
-                console.error('Clear error:', error);
             }
+            
+            toast.innerHTML = `
+                <div class="toast-icon ${type}">
+                    ${icons[type] || icons.info}
+                </div>
+                <div class="toast-content">
+                    ${title ? `<div class="toast-title">${title}</div>` : ''}
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                </div>
+                ${actionsHTML}
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Add click handlers for action buttons
+            if (actions.length > 0) {
+                toast.querySelectorAll('.toast-btn').forEach((btn, index) => {
+                    btn.addEventListener('click', () => {
+                        if (actions[index].onClick) {
+                            actions[index].onClick();
+                        }
+                        removeToast(toast);
+                    });
+                });
+            }
+            
+            // Auto-remove if duration is set
+            if (duration && actions.length === 0) {
+                setTimeout(() => {
+                    removeToast(toast);
+                }, duration);
+            }
+            
+            return toast;
+        }
+
+        function removeToast(toast) {
+            toast.classList.add('hiding');
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 300);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
