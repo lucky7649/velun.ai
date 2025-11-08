@@ -203,6 +203,19 @@ def clear_chat():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+# ==================== SEO ROUTES ====================
+
+from flask import send_from_directory
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory('static', 'robots.txt')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('static', 'sitemap.xml')
 
 # ==================== ERROR HANDLERS ====================
 

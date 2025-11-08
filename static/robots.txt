@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://velun-ai.onrender.com/sitemap.xml
